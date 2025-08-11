@@ -1,11 +1,6 @@
-import { getAuth } from "@clerk/express";
-
-export const protectedRoute = (req, res, next) => {
-  try {
-    const { userId } = getAuth(req); // throws if token invalid
-    req.userId = userId;
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: "Unauthorized" });
+export const protectRoute = async (req, res, next) => {
+  if (!req.auth().isAuthenticated) {
+    return res.status(401).json({ message: "Unauthorized - you must be logged in" });
   }
+  next();
 };
